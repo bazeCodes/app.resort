@@ -1,1 +1,23 @@
 @import "tailwindcss";
+/* Calendar background */
+.rdp {
+  --rdp-background-color: #fff !important;
+}
+
+/* Selected date color (blue → custom) */
+.rdp-day_selected,
+.rdp-day_selected:focus-visible,
+.rdp-day_selected:hover {
+  background-color:  #5ae0f2 !important; /* light beige */
+  color: #10b5cb !important; /* dark brown text */
+}
+
+/* Hover color */
+.rdp-day:hover {
+  background-color:  #10b5cb1a !important;
+}
+
+/* Focus ring (blue → custom) */
+.rdp-day:focus-visible {
+  outline: 2px solid  #10b5cb !important;
+}
