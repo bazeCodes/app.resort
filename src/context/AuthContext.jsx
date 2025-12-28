@@ -4,10 +4,13 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);         // Stored user data
-  const [isLogin, setIsLogin] = useState(false);  // Login state
-  const [loading, setLoading] = useState(true);   // Loading state
+  const [user, setUser] = useState(null);         // store user details
+  const [isLogin, setIsLogin] = useState(false);  // login state
+  const [loading, setLoading] = useState(true);   // loading state
 
+  // -----------------------------
+  // Load and validate token on refresh
+  // -----------------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -19,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const res = await fetch("http://localhost:4000/api/user/login_check", {
           method: "GET",
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = await res.json();
@@ -42,14 +45,31 @@ export const AuthProvider = ({ children }) => {
     checkUser();
   }, []);
 
+  // -----------------------------
+  // Called immediately after login
+  // -----------------------------
+  const login = (userData, token) => {
+    localStorage.setItem("token", token);
+    setUser(userData);
+    setIsLogin(true);
+  };
+
+  // -----------------------------
+  // Logout user
+  // -----------------------------
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    setIsLogin(false);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isLogin,
-        setIsLogin,
-        setUser,
-        root: "user", // Added here
+        login,
+        logout,
       }}
     >
       {!loading && children}

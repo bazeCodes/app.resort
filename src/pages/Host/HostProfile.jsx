@@ -1,7 +1,7 @@
 import React from "react";
 import { FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
-import HostSidebar from "../../components/HostSidebar";
-import Navbar from "../../components/Navbar";
+import HostSidebar from "../../components/Host/HostSidebar";
+import Navbar from "../../components/Host/Navbar";
 
 const HostProfile = () => {
   return (

@@ -29,7 +29,7 @@ const sidebarItems = [
   {
     title: "Settings",
     icon: Settings,
-    path: "#",
+    path: "*",
   },
 ];
 

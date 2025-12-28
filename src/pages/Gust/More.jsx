@@ -37,7 +37,7 @@ const More = () => {
       <div className="space-y-2 pt-3">
         <MenuItem text="Log out" />
       </div>
-    </div>
+    </div>          
   );
 };
 

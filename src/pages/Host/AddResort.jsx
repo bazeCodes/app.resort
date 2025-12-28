@@ -1,160 +1,598 @@
-import React from "react";
-import HostSidebar from "../../components/HostSidebar";
-import Navbar from "../../components/Navbar";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Upload, X, Plus, Trash2 } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
-const AddResort = () => {
-  return (
-    <div>
-      <Navbar />
-      <div className="flex min-h-screen bg-background">
-        <HostSidebar />
-        <main className="flex-1 p-4 sm:p-6 md:p-20">
-          <div className="max-w-2xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold">Add New Resort</h1>
-              <p className="text-gray-500 text-sm md:text-base">
-                Fill in the details of your property
+const propertyTypes = [
+  { id: "villa", label: "Villa", icon: "🏰" },
+  { id: "tent", label: "Tent", icon: "⛺" },
+  { id: "homestay", label: "Home Stay", icon: "🏠" },
+  { id: "bamboo-hut", label: "Bamboo Hut", icon: "🛖" },
+  { id: "apartment", label: "Apartment", icon: "🏢" },
+  { id: "cottage", label: "Cottage", icon: "🏡" },
+  { id: "resort", label: "Resort", icon: "🏝️" },
+  { id: "hotel", label: "Hotel", icon: "🏨" },
+];
+
+export default function AddResort() {
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const [formData, setFormData] = useState({
+   PropertyName: "",
+    // Basics (start from 0 as you requested)
+    guests: 0,
+    bedrooms: 0,
+    beds: 0,
+    bathrooms: 0,
+    // property and location
+    propertyType: "",
+    flat: "",
+    address: "",
+    landmark: "",
+    locality: "",
+    city: "",
+    state: "",
+    pincode: "",
+    country: "",
+    // photos
+    photos: [],
+    // pricing
+    basePrice: "",
+    weekendPrice: "",
+  });
+
+
+  const submitProperty = async () => {
+  const fd = new FormData();
+
+  Object.keys(formData).forEach((key) => {
+    if (key !== "photos") {
+      fd.append(key, formData[key]);
+    }
+  });
+
+  formData.photos.forEach((p) => {
+    fd.append("photos", p.file); // 'file' based on your structure
+  });
+
+  const res = await fetch("http://localhost:4000/api/property/create", {
+    method: "POST",
+    body: fd,
+  });
+
+  const data = await res.json();
+  console.log(data);
+};
+
+
+  const totalSteps = 6;
+  const progress = Math.round((currentStep / totalSteps) * 100);
+
+  // Revoke objectURLs when photos are removed or component unmounts
+  useEffect(() => {
+    return () => {
+      formData.photos.forEach((p) => {
+        if (p && p.previewUrl) URL.revokeObjectURL(p.previewUrl);
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // --- HANDLE NEXT BUTTON ---
+  const handleNext = async() => {
+    if (!stepReady) return;
+
+    if (currentStep < totalSteps) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+  navigate("/Host/ConfirmProperty", {
+    state: formData,
+  });
+}
+  };
+  
+  const handleBack = () => {
+    if (currentStep > 1) setCurrentStep((s) => s - 1);
+    else navigate("/Host/MyResort");
+  };
+
+  let stepReady = false;
+
+  if (currentStep === 1) {
+    stepReady = !!formData.PropertyName?.trim();
+  }
+
+  if (currentStep === 2) {
+    stepReady =
+      formData.guests > 0 &&
+      formData.bedrooms > 0 &&
+      formData.beds > 0 &&
+      formData.bathrooms > 0;
+  }
+
+  if (currentStep === 3) {
+    stepReady = !!formData.propertyType;
+  }
+
+  if (currentStep === 4) {
+    stepReady =
+      !!formData.address?.trim() &&
+      !!formData.city?.trim() &&
+      !!formData.country?.trim() &&
+      !!formData.landmark?.trim() &&
+      !!formData.state?.trim() &&
+      !!formData.pincode?.trim() &&
+      !!formData.flat?.trim();
+  }
+
+  if (currentStep === 5) {
+    stepReady = formData.photos.length > 0;
+  }
+
+  if (currentStep === 6) {
+    stepReady = !!formData.basePrice?.trim() && !!formData.weekendPrice?.trim();
+  }
+
+
+  // Photo handling: save File plus previewUrl for display
+  const handlePhotoUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const mapped = files.map((f) => {
+      return { file: f, previewUrl: URL.createObjectURL(f), name: f.name };
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      photos: [...prev.photos, ...mapped],
+    }));
+
+    // reset input value is handled by browser if input is not controlled
+  };
+
+  const removePhoto = (index) => {
+    setFormData((prev) => {
+      const newPhotos = prev.photos.slice();
+      const removed = newPhotos.splice(index, 1)[0];
+      if (removed && removed.previewUrl)
+        URL.revokeObjectURL(removed.previewUrl);
+      return { ...prev, photos: newPhotos };
+    });
+  };
+
+  // rendering each step
+  const renderStepContent = () => {
+    switch (currentStep) {
+
+      // 1. PropertyName
+      case 1:
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold text-gray-900">
+                What's the name of your Property?
+              </h2>
+              <p className="text-gray-500">This will be shown to guests</p>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="PropertyName" className="font-medium">
+                Property Name
+              </label>
+              <input
+                id="PropertyName"
+                placeholder=" Sunset Paradise Resort"
+                value={formData.PropertyName}
+                onChange={(e) =>
+                  setFormData({ ...formData, PropertyName: e.target.value })
+                }
+                className="text-lg border p-3 rounded w-full"
+              />
+            </div>
+          </div>
+        );
+
+      // 2. Basics Section (counters)
+      case 2:
+        return (
+          <div className="space-y-10">
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Share some basics about your place
+              </h2>
+              <p className="text-gray-500">
+                You'll add more details later, such as bed types.
               </p>
             </div>
 
-            {/* Property Details Form */}
-            <div className="bg-white border rounded-xl shadow-sm p-5">
-              <h2 className="text-lg md:text-xl font-semibold mb-4">
-                Property Details
-              </h2>
+            <div className="space-y-6 max-w-xl mx-auto">
+              {[
+                { key: "guests", label: "Guests" },
+                { key: "bedrooms", label: "Bedrooms" },
+                { key: "beds", label: "Beds" },
+                { key: "bathrooms", label: "Bathrooms" },
+              ].map((item) => (
+                <div
+                  key={item.key}
+                  className="flex items-center justify-between py-4 border-t"
+                >
+                  <span className="text-lg text-gray-700">{item.label}</span>
 
-              <form className="space-y-4">
-                {/* Property Title */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Property Title
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  />
-                </div>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          [item.key]: Math.max((prev[item.key] || 0) - 1, 0),
+                        }))
+                      }
+                      className="h-10 w-10 flex items-center justify-center rounded-full border text-gray-700 hover:bg-gray-50"
+                    >
+                      –
+                    </button>
 
-                {/* Description */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    placeholder="Describe your property..."
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
-                    rows="3"
-                  ></textarea>
-                </div>
+                    <span className="text-xl font-medium w-8 text-center">
+                      {formData[item.key] || 0}
+                    </span>
 
-                {/* Location */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Place"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  />
-                </div>
-
-                {/* Price and Guests */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Price per Night ($)
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Max Guests
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          [item.key]: (prev[item.key] || 0) + 1,
+                        }))
+                      }
+                      className="h-10 w-10 flex items-center justify-center rounded-full border text-gray-700 hover:bg-gray-50"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
-
-                {/* Bedrooms and Bathrooms */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Bedrooms
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Bathrooms
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    />
-                  </div>
-                </div>
-
-                {/* Amenities */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Amenities (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="WiFi, Pool, Beach Access, Spa"
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  />
-                </div>
-                {/* Image */}
-                <div>
-                  <label className="block text-gray-700 mb-1">
-                    Product Image
-                  </label>
-                  <input
-                    type="file"
-                    name="imageFile"
-                    onChange=""
-                    className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-teal-500"
-                  />
-                </div>
-
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
-                  <button
-                    type="submit"
-                    className="bg-teal-500 hover:bg-teal-600 text-white font-medium px-4 py-2 rounded-md w-full sm:w-auto"
-                  >
-                    Add Resort
-                  </button>
-                  <button
-                    type="button"
-                    className="border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium px-4 py-2 rounded-md w-full sm:w-auto"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
+              ))}
             </div>
           </div>
-        </main>
+        );
+
+      // 3. Property Type
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold">
+                What type of property is this?
+              </h2>
+              <p className="text-gray-500">
+                Choose the category that best fits
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 items-center">
+              {propertyTypes.map((type) => (
+                <button
+                  key={type.id}
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, propertyType: type.id }))
+                  }
+                  className={`p-6 rounded-lg border-2 text-left transition ${
+                    formData.propertyType === type.id
+                      ? "border-[#10b5cb] bg-[#e6fbfc]"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <div className="text-4xl mb-2">{type.icon}</div>
+                  <div className="font-medium text-gray-900">{type.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      // 4. Address
+      case 4:
+        return (
+          <div className="space-y-10">
+            {/* Header */}
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Confirm your address
+              </h2>
+              <p className="text-gray-500">
+                Your address is only shared with guests after they've made a
+                reservation.
+              </p>
+            </div>
+
+            {/* Country / Region */}
+            <div className="space-y-2 max-w-xl mx-auto">
+              <label className="font-medium text-gray-700">
+                Country/Region
+              </label>
+
+              <select
+                className="w-full border p-3 rounded-lg text-gray-900"
+                value={formData.country}
+                onChange={(e) =>
+                  setFormData({ ...formData, country: e.target.value })
+                }
+              >
+                <option value="">Select Country</option>
+                <option value="India - IN">India - IN</option>
+                <option value="USA - US">USA - US</option>
+                <option value="UK - GB">United Kingdom - GB</option>
+              </select>
+            </div>
+
+            {/* Address Fields */}
+            <div className="space-y-0 max-w-xl mx-auto border rounded-xl overflow-hidden">
+              {/* Flat / House */}
+              <input
+                type="text"
+                placeholder="Flat, house, etc. (if applicable)"
+                value={formData.flat || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, flat: e.target.value })
+                }
+                className="w-full border-b p-4 focus:outline-none"
+              />
+
+              {/* Street address */}
+              <input
+                type="text"
+                placeholder="Street address"
+                value={formData.address}
+                onChange={(e) =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
+                className="w-full border-b p-4 focus:outline-none"
+              />
+
+              {/* Landmark */}
+              <input
+                type="text"
+                placeholder="Nearby landmark (if applicable)"
+                value={formData.landmark || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, landmark: e.target.value })
+                }
+                className="w-full border-b p-4 focus:outline-none"
+              />
+
+              {/* District / Locality */}
+              <input
+                type="text"
+                placeholder="District/locality (if applicable)"
+                value={formData.locality || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, locality: e.target.value })
+                }
+                className="w-full border-b p-4 focus:outline-none"
+              />
+
+              {/* City */}
+              <input
+                type="text"
+                placeholder="City/town"
+                value={formData.city}
+                onChange={(e) =>
+                  setFormData({ ...formData, city: e.target.value })
+                }
+                className="w-full border-b p-4 focus:outline-none"
+              />
+
+              {/* State */}
+              <input
+                type="text"
+                placeholder="State/union territory"
+                value={formData.state}
+                onChange={(e) =>
+                  setFormData({ ...formData, state: e.target.value })
+                }
+                className="w-full border-b p-4 focus:outline-none"
+              />
+
+              {/* Pincode */}
+              <input
+                type="text"
+                placeholder="PIN code"
+                value={formData.pincode}
+                maxLength={6} // optional: limit to 6 digits (India PIN)
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // Allow ONLY digits
+                  if (/^\d*$/.test(value)) {
+                    setFormData({ ...formData, pincode: value });
+                  }
+                }}
+                className="w-full p-4 focus:outline-none"
+              />
+            </div>
+          </div>
+        );
+
+      // 5. Photos
+      case 5:
+        return (
+          <div className="space-y-6">
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold">
+                Add photos of your property
+              </h2>
+              <p className="text-gray-500">
+                Upload at least one photo. You can add more later.
+              </p>
+            </div>
+
+            <div className="border-2 border-dashed rounded-lg p-8 text-center">
+              <input
+                type="file"
+                id="photo-upload"
+                multiple
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+              <label
+                htmlFor="photo-upload"
+                className="cursor-pointer inline-block"
+              >
+                <Upload className="mx-auto h-12 w-12 mb-4 text-gray-500" />
+                <p className="text-gray-600">
+                  Click to upload or drag and drop
+                  <br />
+                  PNG, JPG, WEBP up to 10MB
+                </p>
+              </label>
+            </div>
+
+            {formData.photos.length > 0 && (
+              <div className="grid grid-cols-3 gap-4">
+                {formData.photos.map((p, idx) => (
+                  <div key={idx} className="relative group">
+                    <img
+                      src={p.previewUrl}
+                      alt={p.name || `photo-${idx}`}
+                      className="w-full h-32 object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(idx)}
+                      className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+
+      // 6. Pricing (base price + weekend price)
+      case 6:
+        return (
+          <div className="space-y-10">
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold text-gray-900">
+                Set your pricing
+              </h2>
+              <p className="text-gray-500">
+                Define your base rate and any weekend price
+              </p>
+            </div>
+
+            <div className="space-y-4 max-w-xl mx-auto">
+              <div>
+                <label htmlFor="basePrice" className="font-medium">
+                  Base Price/Night (₹) *
+                </label>
+                <input
+                  id="basePrice"
+                  type="number"
+                  placeholder=" 2500"
+                  value={formData.basePrice}
+                  onChange={(e) =>
+                    setFormData({ ...formData, basePrice: e.target.value })
+                  }
+                  className="w-full border rounded-lg p-3"
+                />
+              </div>
+              {/* Weekend Price (Single Field) */}
+              <div>
+                <label className="font-medium">Weekend Price</label>
+                <input
+                  type="number"
+                  placeholder="3500"
+                  value={formData.weekendPrice}
+                  onChange={(e) =>
+                    setFormData({ ...formData, weekendPrice: e.target.value })
+                  }
+                  className="w-full border rounded-lg p-3"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Toaster for toast messages (you can remove if you prefer global Toaster in App) */}
+      <Toaster position="top-center" />
+
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gray-200 z-50">
+        <div
+          className="h-full bg-[#10b5cb] transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      <div className="container max-w-4xl mx-auto px-4 py-8 pt-12 pb-32">
+        {/* Step Indicators */}
+        <div className="flex justify-center mb-8">
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalSteps }).map((_, index) => (
+              <div key={index} className="flex items-center">
+                <div
+                  className={`w-8 h-8 flex items-center justify-center rounded-full ${
+                    index + 1 === currentStep
+                      ? "bg-[#10b5cb] text-white"
+                      : index + 1 < currentStep
+                      ? "bg-[#f0e6d5c3] text-black"
+                      : "bg-gray-300"
+                  }`}
+                >
+                  {index + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-white shadow-md rounded-lg p-8">
+          {renderStepContent()}
+        </div>
+
+        {/* Navigation (Fixed Bottom Bar) */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4">
+          <div className="max-w-4xl mx-auto flex justify-between">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="px-6 py-3 rounded-md border flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </button>
+
+            <button
+              type="button"
+              onClick={handleNext}
+              disabled={!stepReady}
+              className={`px-6 py-3 rounded-md flex items-center gap-2 transition 
+    ${
+      stepReady
+        ? "bg-[#10b5cb] text-white hover:bg-[#0e9ab1]"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+    }
+  `}
+            >
+              {currentStep === totalSteps ? "Submit" : "Next"}
+              {currentStep < totalSteps && <ArrowRight className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default AddResort;
+}

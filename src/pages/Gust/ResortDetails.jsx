@@ -20,7 +20,6 @@ function ResortDetails({ place }) {
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
       "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800",
     ],
   };
 

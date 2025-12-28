@@ -1,14 +1,34 @@
 import React from "react";
 
 import { MapPin, Users, Bed, Bath, Edit, Trash2 } from "lucide-react";
-import HostSidebar from "../../components/HostSidebar";
+import HostSidebar from "../../components/Host/HostSidebar";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Host/Navbar";
 
 function AddResort() {
+  const resorts = [
+    {
+      _id: "6944e12a70b9873a7c4d1876",
+      PropertyName: "Leandra Leach",
+      guests: 2,
+      bedrooms: 2,
+      beds: 1,
+      bathrooms: 1,
+      propertyType: "villa",
+      city: "Similique placeat a",
+      country: "India - IN",
+      photos: [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+      ],
+      basePrice: 217,
+      weekendPrice: 62,
+      createdAt: "2025-12-19T05:22:50.580+00:00",
+    },
+  ];
+
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="flex min-h-screen bg-gray-50">
         {/* Sidebar */}
         <HostSidebar />
@@ -32,16 +52,16 @@ function AddResort() {
 
           {/* Resort Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5].map((_, index) => (
+            {resorts.map((resort) => (
               <div
-                key={index}
+                key={resort._id}
                 className="bg-white rounded-xl shadow-md overflow-hidden"
               >
                 <div className="relative">
                   <img
-                    src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"
-                    alt="Resort"
-                    className="w-full h-45 object-cover"
+                    src={resort.photos?.[0]}
+                    alt={resort.PropertyName}
+                    className="w-full h-48 object-cover "
                   />
                   <div className="absolute top-3 right-3 flex space-x-2">
                     <span className="bg-[#10b5cb] text-white text-xs px-2 py-1 rounded-md">
@@ -54,30 +74,24 @@ function AddResort() {
                 </div>
 
                 <div className="p-4">
-                  <h2 className="font-semibold text-lg sm:text-xl mb-1">
-                    Palm Glade
+                  <h2 className="font-semibold text-lg">
+                    {resort.PropertyName}
                   </h2>
-                  <p className="flex items-center text-gray-500 text-sm sm:text-base mb-3">
-                    <MapPin className="h-4 w-4 mr-1" /> Bali
+
+                  <p className="text-gray-500 text-sm">
+                    {resort.city}, {resort.country}
                   </p>
 
                   <div className="flex space-x-4 text-gray-600 text-sm sm:text-base mb-3">
-                    <span className="flex items-center">
-                      <Users className="h-4 w-4 mr-1" /> 16
-                    </span>
-                    <span className="flex items-center">
-                      <Bed className="h-4 w-4 mr-1" /> 8
-                    </span>
-                    <span className="flex items-center">
-                      <Bath className="h-4 w-4 mr-1" /> 4
-                    </span>
+                    <span>👥 {resort.guests}</span>
+                    <span>🛏 {resort.bedrooms}</span>
+                    <span>🛁 {resort.bathrooms}</span>
                   </div>
 
-                  <p className="text-[#10b5cb] font-semibold text-lg sm:text-xl mb-4">
-                    $358{" "}
-                    <span className="text-gray-500 text-sm sm:text-base">
-                      / night
-                    </span>
+                  <p className="mt-2 capitalize">{resort.propertyType}</p>
+
+                  <p className="text-[#10b5cb] font-semibold mt-2 mb-4">
+                    ₹{resort.basePrice} / night
                   </p>
 
                   <div className="flex justify-between border-gray-300 border-t pt-4 gap-2">
