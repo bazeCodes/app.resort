@@ -16,7 +16,10 @@ function Destination({ place }) {
           <span className="bg-gray-100 px-2 py-0.5 rounded-full text-xs font-medium">
             {place.type}
           </span>
-          <div style={{ color: "hsl(187, 85%, 43%)" }} className="flex items-center">
+          <div
+            style={{ color: "hsl(187, 85%, 43%)" }}
+            className="flex items-center"
+          >
             <Star size={14} className="fill-[hsl(187,85%,43%)] mr-1" />
             <span className="font-medium text-gray-700">{place.rating}</span>
           </div>
@@ -29,7 +32,12 @@ function Destination({ place }) {
           {place.location}
         </div>
         <div className="flex items-baseline mt-3">
-          <span style={{ color: "hsl(187, 85%, 43%)" }} className="font-bold text-xl">{place.price}</span>
+          <span
+            style={{ color: "hsl(187, 85%, 43%)" }}
+            className="font-bold text-xl"
+          >
+            {place.price}
+          </span>
           <span className="text-gray-500 text-sm ml-1">/ night</span>
         </div>
       </div>

@@ -3,23 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Upload, X, Plus, Trash2 } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
-const propertyTypes = [
-  { id: "villa", label: "Villa", icon: "🏰" },
-  { id: "tent", label: "Tent", icon: "⛺" },
-  { id: "homestay", label: "Home Stay", icon: "🏠" },
-  { id: "bamboo-hut", label: "Bamboo Hut", icon: "🛖" },
-  { id: "apartment", label: "Apartment", icon: "🏢" },
-  { id: "cottage", label: "Cottage", icon: "🏡" },
-  { id: "resort", label: "Resort", icon: "🏝️" },
-  { id: "hotel", label: "Hotel", icon: "🏨" },
-];
-
 export default function AddResort() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
 
   const [formData, setFormData] = useState({
-   PropertyName: "",
+    PropertyName: "",
     // Basics (start from 0 as you requested)
     guests: 0,
     bedrooms: 0,
@@ -42,29 +31,27 @@ export default function AddResort() {
     weekendPrice: "",
   });
 
-
   const submitProperty = async () => {
-  const fd = new FormData();
+    const fd = new FormData();
 
-  Object.keys(formData).forEach((key) => {
-    if (key !== "photos") {
-      fd.append(key, formData[key]);
-    }
-  });
+    Object.keys(formData).forEach((key) => {
+      if (key !== "photos") {
+        fd.append(key, formData[key]);
+      }
+    });
 
-  formData.photos.forEach((p) => {
-    fd.append("photos", p.file); // 'file' based on your structure
-  });
+    formData.photos.forEach((p) => {
+      fd.append("photos", p.file); // 'file' based on your structure
+    });
 
-  const res = await fetch("http://localhost:4000/api/property/create", {
-    method: "POST",
-    body: fd,
-  });
+    const res = await fetch("http://localhost:4000/api/property/create", {
+      method: "POST",
+      body: fd,
+    });
 
-  const data = await res.json();
-  console.log(data);
-};
-
+    const data = await res.json();
+    console.log(data);
+  };
 
   const totalSteps = 6;
   const progress = Math.round((currentStep / totalSteps) * 100);
@@ -80,18 +67,18 @@ export default function AddResort() {
   }, []);
 
   // --- HANDLE NEXT BUTTON ---
-  const handleNext = async() => {
+  const handleNext = async () => {
     if (!stepReady) return;
 
     if (currentStep < totalSteps) {
       setCurrentStep((prev) => prev + 1);
     } else {
-  navigate("/Host/ConfirmProperty", {
-    state: formData,
-  });
-}
+      navigate("/Host/ConfirmProperty", {
+        state: formData,
+      });
+    }
   };
-  
+
   const handleBack = () => {
     if (currentStep > 1) setCurrentStep((s) => s - 1);
     else navigate("/Host/MyResort");
@@ -115,6 +102,17 @@ export default function AddResort() {
     stepReady = !!formData.propertyType;
   }
 
+  const propertyTypes = [
+    { id: "villa", label: "Villa", icon: "🏰" },
+    { id: "Tent", label: "Tent", icon: "⛺" },
+    { id: "Homestay", label: "Home Stay", icon: "🏠" },
+    { id: "Bamboo-hut", label: "Bamboo Hut", icon: "🛖" },
+    { id: "Apartment", label: "Apartment", icon: "🏢" },
+    { id: "Cottage", label: "Cottage", icon: "🏡" },
+    { id: "Resort", label: "Resort", icon: "🏝️" },
+    { id: "Hotel", label: "Hotel", icon: "🏨" },
+  ];
+
   if (currentStep === 4) {
     stepReady =
       !!formData.address?.trim() &&
@@ -133,7 +131,6 @@ export default function AddResort() {
   if (currentStep === 6) {
     stepReady = !!formData.basePrice?.trim() && !!formData.weekendPrice?.trim();
   }
-
 
   // Photo handling: save File plus previewUrl for display
   const handlePhotoUpload = (e) => {
@@ -165,7 +162,6 @@ export default function AddResort() {
   // rendering each step
   const renderStepContent = () => {
     switch (currentStep) {
-
       // 1. PropertyName
       case 1:
         return (

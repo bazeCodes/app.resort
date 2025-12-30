@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -13,76 +13,16 @@ const services = [
   { icon: <Wrench size={22} />, title: "Full Service Villa Management" },
 ];
 
-const destinations = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-    type: "Apartment",
-    title: "Modern Downtown Loft",
-    location: "New York, USA",
-    price: "$120",
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
-    type: "House",
-    title: "Cozy Beach House",
-    location: "Malibu, USA",
-    price: "$250",
-    rating: 4.9,
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800",
-    type: "Villa",
-    title: "Luxury Villa with Pool",
-    location: "Bali, Indonesia",
-    price: "$180",
-    rating: 5.0,
-  },
-  {
-    id: 4,
-    image: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800",
-    type: "Villa",
-    title: "Luxury Villa with Pool",
-    location: "Bali, Indonesia",
-    price: "$180",
-    rating: 5.0,
-  },
-  {
-    id: 5,
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-    type: "Cabin",
-    title: "Mountain Cabin Retreat",
-    location: "Aspen, USA",
-    price: "$200",
-    rating: 4.7,
-  },
-  {
-    id: 6,
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800",
-    type: "House",
-    title: "Cozy Beach House",
-    location: "Malibu, USA",
-    price: "$250",
-    rating: 4.9,
-  },
-];
-
 function Destination({ place }) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState({});
   const navigate = useNavigate();
-
-  const handleSeeAvailability = () => {
-    navigate(`/resortdetails`); // dynamic route for each place
-  };
+  
   return (
     <div className=" relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
       <div className="relative">
         <img
-          src={place.image}
-          alt={place.title}
+          src={`http://localhost:4000/uploads/properties/${place.photos[0]}`}
+          alt={place.PropertyName}
           className="w-full h-64 object-cover"
         />
 
@@ -94,26 +34,29 @@ function Destination({ place }) {
 
         {/* Like button top-right */}
         <button
-          onClick={() => setLiked(!liked)}
+          onClick={() =>
+            setLiked((prev) => ({ ...prev, [place._id]: !prev[place._id] }))
+          }
           className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow hover:bg-white transition"
         >
           <Heart
             size={20}
-            className={liked ? "fill-red-500 text-red-500" : "text-gray-600"}
+            className={
+              liked[place._id] ? "fill-red-500 text-red-500" : "text-gray-600"
+            }
           />
         </button>
       </div>
 
       {/* Text content */}
       <div className="p-4 text-left">
-        <p className="text-sm text-[#10b5cb] font-medium mb-1">{place.type}</p>
-        <h3 className="text-lg font-semibold">{place.title}</h3>
-        <p className="text-gray-500 text-sm">{place.location}</p>
-        <p className="text-[#10b5cb] font-bold mt-2">{place.price}/night</p>
+        <p className="text-sm text-[#10b5cb] font-medium mb-1">{place.propertyType}</p>
+        <h3 className="text-lg font-semibold">{place.PropertyName}</h3>
+        <p className="text-gray-500 text-sm">{place.city}</p>
+        <p className="text-[#10b5cb] font-bold mt-2">${place.basePrice}/night</p>
         <button
-          onClick={handleSeeAvailability}
-          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded-md 
-                     font-medium hover:bg-[hsl(187,85%,38%)] transition"
+          onClick={() => navigate(`/resort/${place._id}`)}
+          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded"
         >
           See Availability
         </button>
@@ -122,7 +65,20 @@ function Destination({ place }) {
   );
 }
 
+
 function Index() {
+
+  const [destinations, setDestinations] = useState([]);
+
+ useEffect(() => {
+  fetch("http://localhost:4000/api/property/resorts")
+    .then((res) => res.json())
+    .then((data) => {
+      setDestinations(data.properties || []);
+    })
+    .catch((err) => console.error("Error fetching resorts:", err));
+}, []);
+
   return (
     <div>
       <section
@@ -146,58 +102,6 @@ function Index() {
           <p className="text-gray-200 text-lg mb-10">
             Discover unique accommodations and experiences around the world
           </p>
-
-          {/* Search Card */}
-          {/* <div className="bg-white/90 backdrop-blur-md shadow-lg rounded-2xl p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
-              <div className="text-left">
-                <label className="flex items-center text-gray-600 font-medium mb-1">
-                  <FaMapMarkerAlt className="mr-2" /> Location
-                </label>
-                <input
-                  type="text"
-                  placeholder="Where are you going?"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#10b5cb]"
-                />
-              </div>
-
-              <div className="text-left">
-                <label className="flex items-center text-gray-600 font-medium mb-1">
-                  <FaCalendarAlt className="mr-2" /> Check In
-                </label>
-                <input
-                  type="date"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#10b5cb]"
-                />
-              </div>
-
-              <div className="text-left">
-                <label className="flex items-center text-gray-600 font-medium mb-1">
-                  <FaCalendarAlt className="mr-2" /> Check Out
-                </label>
-                <input
-                  type="date"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#10b5cb]"
-                />
-              </div>
-
-              <div className="text-left">
-                <label className="flex items-center text-gray-600 font-medium mb-1">
-                  <FaUserFriends className="mr-2" /> Guests
-                </label>
-                <input
-                  type="number"
-                  placeholder="0"
-                  min="1"
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#10b5cb]"
-                />
-              </div>
-            </div>
-
-            <button className="w-full bg-[#10b5cb] text-white py-3 rounded-md font-medium flex items-center justify-center hover:bg-[hsl(187,85%,38%)] transition">
-              <FaSearch className="mr-2" /> Search
-            </button>
-          </div> */}
         </div>
       </section>
 
@@ -219,7 +123,7 @@ function Index() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {destinations.map((place) => (
-            <Destination key={place.id} place={place} />
+            <Destination key={place._id} place={place} />
           ))}
         </div>
         <div className="w-full flex justify-center mt-10">

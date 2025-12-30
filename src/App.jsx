@@ -40,7 +40,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
-            <Route path= "/More" element= {<More />}/>
+            <Route path= "/More" element= {<More/>}/>
           </Routes>
         </Router>
       </AuthProvider>
