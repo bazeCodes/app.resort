@@ -15,7 +15,6 @@ import ConfirmProperty from "./pages/Host/ConfirmProperty";
 import Profile from "./pages/Gust/Profile";
 import ResortDetails from "./pages/Gust/ResortDetails";
 import NotFound from "./pages/Errors/NotFond";
-import More from "./pages/Gust/More";
 
 
 function App() {
@@ -39,7 +38,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
-            <Route path= "/More" element= {<More/>}/>
           </Routes>
         </Router>
       

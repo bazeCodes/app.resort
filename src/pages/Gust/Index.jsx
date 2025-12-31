@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Home, Trees, Gem, Wrench } from "lucide-react";
 
-import Footer from "../../components/Footer";
-import Destination from "../../components/Destination";
+import Footer from "../../components/Gust/Footer";
+import Destination from "../../components/Gust/Destination";
 
 function Index() {
   const [destinations, setDestinations] = useState([]);

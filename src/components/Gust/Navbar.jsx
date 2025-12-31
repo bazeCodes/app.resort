@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import { Outlet, Link } from "react-router-dom";
-import More from "../../pages/Gust/More";
+import ProfileDrawer from "../../pages/Gust/ProfileDrawer";
 import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
@@ -9,15 +9,19 @@ function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
-  const { isLogin, user, logout  } = useAuth();
+  const { isLogin, user, logout } = useAuth();
 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const drawerRef = useRef(null);
+
+  // Close when clicking outside
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-        setIsUserMenuOpen(false);
+    const handleClickOutside = (e) => {
+      if (drawerRef.current && !drawerRef.current.contains(e.target)) {
+        setIsDrawerOpen(false);
       }
-    }
-    
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -88,28 +92,24 @@ function Navbar() {
               {/* USER ICON */}
               <div className="relative" ref={userMenuRef}>
                 <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  onClick={() => setIsDrawerOpen(true)}
                   className="text-3xl"
                   style={{ color: "#5b4636" }}
                 >
                   <FaUserCircle />
                 </button>
 
-                {isUserMenuOpen && <More />}
+                {isUserMenuOpen && <ProfileDrawer />}
               </div>
+              {isDrawerOpen && (
+                <ProfileDrawer
+                  ref={drawerRef}
+                  onClose={() => setIsDrawerOpen(false)}
+                />
+              )}
 
               {/* LOGOUT BUTTON */}
-              <button
-                onClick={logout}
-                className="px-4 py-2"
-                style={{
-                  backgroundColor: "#bfa98a",
-                  color: "white",
-                  borderRadius: "6px",
-                }}
-              >
-                Logout
-              </button>
+              
             </>
           ) : (
             <>
@@ -124,14 +124,15 @@ function Navbar() {
                 Login
               </Link>
               <Link
-              to="/register"
-              className="px-4 py-2"
+                to="/register"
+                className="px-4 py-2"
                 style={{
                   color: "#5b4636",
-                  border: "1px solid #b6a893",}}
-            >
-              Register
-            </Link>
+                  border: "1px solid #b6a893",
+                }}
+              >
+                Register
+              </Link>
             </>
           )}
         </div>
@@ -231,7 +232,7 @@ function Navbar() {
           color: "#f6f1e7",
           fontWeight: "600",
           borderRadius: "8px",
-          zIndex: "100",
+          zIndex: "39",
         }}
       >
         Book Now
