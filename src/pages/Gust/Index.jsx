@@ -1,83 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa";
-import { Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Home, Trees, Gem, Wrench } from "lucide-react";
 
 import Footer from "../../components/Footer";
-
-const services = [
-  { icon: <Home size={22} />, title: "Villa Development" },
-  { icon: <Trees size={22} />, title: "Land Sourcing & Sales" },
-  { icon: <Gem size={22} />, title: "Property Investment" },
-  { icon: <Wrench size={22} />, title: "Full Service Villa Management" },
-];
-
-function Destination({ place }) {
-  const [liked, setLiked] = useState({});
-  const navigate = useNavigate();
-  
-  return (
-    <div className=" relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-      <div className="relative">
-        <img
-          src={`http://localhost:4000/uploads/properties/${place.photos[0]}`}
-          alt={place.PropertyName}
-          className="w-full h-64 object-cover"
-        />
-
-        {/* Rating bottom-left */}
-        <div className="absolute bottom-3 left-3 bg-black/70 text-white text-sm px-2 py-1 rounded-full flex items-center gap-1">
-          <FaStar className="text-yellow-400" size={14} />
-          {place.rating}
-        </div>
-
-        {/* Like button top-right */}
-        <button
-          onClick={() =>
-            setLiked((prev) => ({ ...prev, [place._id]: !prev[place._id] }))
-          }
-          className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow hover:bg-white transition"
-        >
-          <Heart
-            size={20}
-            className={
-              liked[place._id] ? "fill-red-500 text-red-500" : "text-gray-600"
-            }
-          />
-        </button>
-      </div>
-
-      {/* Text content */}
-      <div className="p-4 text-left">
-        <p className="text-sm text-[#10b5cb] font-medium mb-1">{place.propertyType}</p>
-        <h3 className="text-lg font-semibold">{place.PropertyName}</h3>
-        <p className="text-gray-500 text-sm">{place.city}</p>
-        <p className="text-[#10b5cb] font-bold mt-2">${place.basePrice}/night</p>
-        <button
-          onClick={() => navigate(`/resort/${place._id}`)}
-          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded"
-        >
-          See Availability
-        </button>
-      </div>
-    </div>
-  );
-}
-
+import Destination from "../../components/Destination";
 
 function Index() {
-
   const [destinations, setDestinations] = useState([]);
 
- useEffect(() => {
-  fetch("http://localhost:4000/api/property/resorts")
-    .then((res) => res.json())
-    .then((data) => {
-      setDestinations(data.properties || []);
-    })
-    .catch((err) => console.error("Error fetching resorts:", err));
-}, []);
+  useEffect(() => {
+    fetch("http://localhost:4000/api/property/resorts")
+      .then((res) => res.json())
+      .then((data) => {
+        setDestinations(data.properties || []);
+      })
+      .catch((err) => console.error("Error fetching resorts:", err));
+  }, []);
+
+  const services = [
+    { icon: <Home size={22} />, title: "Villa Development" },
+    { icon: <Trees size={22} />, title: "Land Sourcing & Sales" },
+    { icon: <Gem size={22} />, title: "Property Investment" },
+    { icon: <Wrench size={22} />, title: "Full Service Villa Management" },
+  ];
 
   return (
     <div>

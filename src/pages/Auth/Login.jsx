@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) =>
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,19 +33,17 @@ function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.message || "Login failed.");
+        setMessage(data.message || "Login failed");
         return;
       }
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setMessage("Login successful");
-        setTimeout(() => navigate("/"), 700);
-      }
-    } catch (err) {
-      setMessage("Could not connect to server.");
-      console.error(err);
+      // ✅ THIS IS THE KEY LINE
+      login(data.user, data.token);
+
+      // Redirect after login
+      navigate("/");
+    } catch (error) {
+      setMessage("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }

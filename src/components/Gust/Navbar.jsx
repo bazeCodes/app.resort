@@ -9,7 +9,7 @@ function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
-  const { isLogin, user, logout } = useAuth();
+  const { isLogin, user, logout  } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -17,6 +17,7 @@ function Navbar() {
         setIsUserMenuOpen(false);
       }
     }
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -82,7 +83,7 @@ function Navbar() {
 
         {/* Desktop User Section */}
         <div className="hidden md:flex items-center space-x-4">
-          {isLogin ? (
+          {user ? (
             <>
               {/* USER ICON */}
               <div className="relative" ref={userMenuRef}>
@@ -122,6 +123,15 @@ function Navbar() {
               >
                 Login
               </Link>
+              <Link
+              to="/register"
+              className="px-4 py-2"
+                style={{
+                  color: "#5b4636",
+                  border: "1px solid #b6a893",}}
+            >
+              Register
+            </Link>
             </>
           )}
         </div>

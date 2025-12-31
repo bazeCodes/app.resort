@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -80,9 +80,9 @@ function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
-              name="fullName"
+              name="name"
               placeholder="Full Name"
-              value={formData.fullName}
+              value={formData.name}
               onChange={handleChange}
               required
               className="w-full p-3 border rounded-md focus:ring-2 focus:ring-[#10b5cb] outline-none"

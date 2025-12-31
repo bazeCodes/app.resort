@@ -4,9 +4,9 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);         // store user details
-  const [isLogin, setIsLogin] = useState(false);  // login state
-  const [loading, setLoading] = useState(true);   // loading state
+  const [user, setUser] = useState(null); // store user details
+  const [isLogin, setIsLogin] = useState(false); // login state
+  const [loading, setLoading] = useState(true); // loading state
 
   // -----------------------------
   // Load and validate token on refresh
@@ -20,10 +20,17 @@ export const AuthProvider = ({ children }) => {
 
     async function checkUser() {
       try {
-        const res = await fetch("http://localhost:4000/api/user/login_check", {
+        const res = await fetch("http://localhost:4000/api/user/profile", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
+
+        if (res.status === 401 || res.status === 403) {
+          console.log("Token expired or invalid. Please login again.");
+          setIsLogin(false);
+          setUser(null);
+          return;
+        }
 
         const data = await res.json();
 
@@ -31,10 +38,12 @@ export const AuthProvider = ({ children }) => {
           setIsLogin(true);
           setUser(data.user);
         } else {
+          console.log("Login check failed:", data);
           setIsLogin(false);
           setUser(null);
         }
       } catch (err) {
+        console.error("Auth check error:", err);
         setIsLogin(false);
         setUser(null);
       }

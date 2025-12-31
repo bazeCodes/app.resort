@@ -14,7 +14,6 @@ import Login from "./pages/Auth/Login";
 import ConfirmProperty from "./pages/Host/ConfirmProperty";
 import Profile from "./pages/Gust/Profile";
 import ResortDetails from "./pages/Gust/ResortDetails";
-import { AuthProvider } from "./context/AuthContext";
 import NotFound from "./pages/Errors/NotFond";
 import More from "./pages/Gust/More";
 
@@ -24,7 +23,7 @@ function App() {
 
   return (
     <>
-      <AuthProvider>
+      
         <Router>
           <Routes>
             {/* ✅ All main pages use Navbar (header + footer shared) */}
@@ -43,7 +42,7 @@ function App() {
             <Route path= "/More" element= {<More/>}/>
           </Routes>
         </Router>
-      </AuthProvider>
+      
     </>
   );
 }
