@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Home, Trees, Gem, Wrench } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import Footer from "../../components/Gust/Footer";
 import Destination from "../../components/Gust/Destination";
 
 function Index() {
+  const navigate = useNavigate();
   const [destinations, setDestinations] = useState([]);
+  const [sortby, setSortBy] = useState("name");
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/property/resorts")
+    fetch("http://localhost:4000/api/property/resorts?sortby=" + sortby)
       .then((res) => res.json())
       .then((data) => {
         setDestinations(data.properties || []);
       })
       .catch((err) => console.error("Error fetching resorts:", err));
   }, []);
+
+  //useffect dependancy array example
 
   const services = [
     { icon: <Home size={22} />, title: "Villa Development" },
@@ -51,7 +59,7 @@ function Index() {
 
       {/* Destination Section */}
       <section
-        className="max-w mx-auto m px-30 py-12 bg-[#f0e6d5c3]"
+        className="max-w mx-auto px-4 sm:px-6 md:px-10 lg:px-30 py-12 bg-[#f0e6d5c3]"
         style={{
           background: "linear-gradient(150deg, #f0e6d5c3 0%, #faf7f2 100%)",
         }}
@@ -66,12 +74,13 @@ function Index() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {destinations.map((place) => (
+          {destinations.slice(0, 6).map((place) => (
             <Destination key={place._id} place={place} />
           ))}
         </div>
         <div className="w-full flex justify-center mt-10">
           <button
+            onClick={() => navigate("/Properties")}
             style={{ backgroundColor: "#10b5cb" }}
             className="px-8 py-3 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
           >

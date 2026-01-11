@@ -1,178 +1,221 @@
-import React, { useState, useEffect } from "react";
-import { Star, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
 
-function ResortDetails({ place }) {
-  // Ensure scroll starts at top when page loads
+export default function ResortDetails() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const demoPlace = {
-    title: "Modern Downtown Loft",
-    location: "New York, USA",
-    price: "$120",
-    rating: 4.8,
-    images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
-    ],
-  };
-
-  const currentPlace = place || demoPlace;
-
+  
   const [liked, setLiked] = useState(false);
+  const [place, setPlace] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Calendar
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchResort = async () => {
+      try {
+        const res = await fetch(`http://localhost:4000/api/property/${id}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to fetch property");
+        }
+
+        setPlace(data.property);
+      } catch (err) {
+        console.error("Failed to load resort", err);
+      }
+    };
+
+    if (id) fetchResort();
+  }, [id]);
+
   const [selectedRange, setSelectedRange] = useState({ from: null, to: null });
+  const pricePerNight = place?.basePrice ?? 0;
 
-  const pricePerNight = 8.999; // Example price (IND)
   const nights =
-    selectedRange.from && selectedRange.to
-      ? (selectedRange.to - selectedRange.from) / (1000 * 60 * 60 * 24)
+    selectedRange?.from && selectedRange?.to
+      ? Math.ceil(
+          (selectedRange.to - selectedRange.from) / (1000 * 60 * 60 * 24)
+        )
       : 0;
+
   const totalCost = nights * pricePerNight;
 
   const formatDate = (date) =>
     date
-      ? date.toLocaleDateString("en-US", {
+      ? date.toLocaleDateString("en-IN", {
           day: "2-digit",
           month: "short",
           year: "numeric",
         })
       : "Select date";
 
-  // Back button
-  const navigate = useNavigate();
+  if (!place) {
+    return <div className="p-6 text-center">Loading resort details...</div>;
+  }
+
+  const photos = place.photos;
+  const totalPhotos = photos.length;
+
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev === 0 ? totalPhotos - 1 : prev - 1));
+  };
+
+  const nextImage = () => {
+    setCurrentIndex((prev) => (prev === totalPhotos - 1 ? 0 : prev + 1));
+  };
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-[#eef5fb] to-white px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 py-6">
       <button
         onClick={() => navigate(-1)}
-        className="absolute top-4 left-4 bg-white/80 p-2 rounded-full shadow hover:bg-white transition"
+        className="flex items-center gap-2 text-gray-600 hover:text-black mb-4"
       >
-        <FaArrowLeft className="text-gray-700" size={18} />
+        <ChevronLeft size={20} />
+        <span className="text-sm font-medium">Back</span>
       </button>
-      <div className="max-w-6xl mx-auto bg-gray-200 rounded-2xl shadow-md overflow-hidden mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Left Half: Images */}
-          <div className="grid grid-rows-2 gap-2 h-[400px] md:h-[600px] relative">
-            <div className="row-span-1">
-              <img
-                src={currentPlace.images[0]}
-                alt={currentPlace.title}
-                className="w-full h-full object-cover rounded-t-2xl"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <img
-                src={currentPlace.images[1]}
-                alt={`${currentPlace.title} view 2`}
-                className="w-full h-full object-cover rounded-bl-2xl"
-              />
-              <img
-                src={currentPlace.images[2]}
-                alt={`${currentPlace.title} view 3`}
-                className="w-full h-full object-cover rounded-br-2xl"
-              />
-            </div>
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-semibold mb-4">
+          {place?.PropertyName}
+        </h1>
+      </div>
+      <div className="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 lg:gap-10">
+        {/* LEFT SECTION */}
+        <div>
+          {/* IMAGE CARD */}
+          <div className="relative rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src={`http://localhost:4000/uploads/properties/${photos[currentIndex]}`}
+              className="w-full h-[220px] sm:h-[300px] md:h-[380px] lg:h-[420px] object-cover transition-all duration-500"
+              alt={`Property image ${currentIndex + 1}`}
+            />
+
+            {/* LEFT */}
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+            >
+              <ChevronLeft />
+            </button>
+
+            {/* RIGHT */}
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+            >
+              <ChevronRight />
+            </button>
+
+            {/* LIKE */}
             <button
               onClick={() => setLiked(!liked)}
-              className="absolute top-4 right-4 bg-white/90 rounded-full p-2 shadow hover:bg-white transition"
+              className="absolute top-4 right-4 bg-white p-2 rounded-full shadow"
             >
               <Heart
-                size={22}
-                className={liked ? "fill-red-500 text-red-500" : "text-gray-600"}
+                className={
+                  liked ? "text-red-500 fill-red-500" : "text-gray-600"
+                }
               />
             </button>
-            <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-1.5 rounded-lg flex items-center space-x-2 shadow">
-              <Star size={16} className="fill-yellow-400 text-yellow-400" />
-              <span className="font-medium text-gray-800">
-                {currentPlace.rating} / 5
+
+            {/* IMAGE COUNTER */}
+            <div className="absolute bottom-4 right-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
+              {currentIndex + 1} / {totalPhotos}
+            </div>
+          </div>
+
+          {/* DETAILS */}
+          <div className="mt-6  ">
+            <h2 className="text-lg sm:text-xl font-semibold">
+              {place?.PropertyType} {place?.city}, {place?.country}
+            </h2>
+            <p className="text-gray-600 mt-1">
+              {place?.guests}Guests · {place?.bedrooms}Bedrooms · {place?.beds}
+              Beds · {place?.bathrooms}Bathrooms
+            </p>
+
+            {/* HOST */}
+            <div className="flex items-center gap-4 mt-6">
+              <img
+                src="https://randomuser.me/api/portraits/women/44.jpg"
+                className="w-12 h-12 rounded-full"
+                alt=""
+              />
+              <div>
+                <p className="font-semibold">Sarah Jenkins</p>
+                <p className="text-sm text-gray-500">(Joined 2020)</p>
+              </div>
+            </div>
+
+            {/* BIO */}
+            <div className="mt-6 bg-white rounded-xl p-5 shadow">
+              <p className="text-gray-700">
+                (Bio: Experienced host, passionate about hospitality and
+                travel.)
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT SECTION */}
+        <div className="space-y-6">
+          {/* SELECTION CARD */}
+          <div className="bg-white rounded-2xl shadow p-6">
+            <h3 className="text-lg font-semibold mb-4">Your Selection</h3>
+
+            <div className="space-y-3 text-gray-700">
+              <div className="flex justify-between">
+                <span>Check-in:</span>
+                <span>{formatDate(selectedRange.from)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Check-out:</span>
+                <span>{formatDate(selectedRange.to)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Total nights:</span>
+                <span>{nights}</span>
+              </div>
+            </div>
+
+            <hr className="my-4" />
+
+            <div className="flex justify-between text-lg font-semibold">
+              <span>Total cost:</span>
+              <span>
+                ₹{totalCost > 0 ? ` ${totalCost.toLocaleString("id-ID")}` : ""}
               </span>
             </div>
           </div>
 
-          {/* Right Half: Calendar and Details */}
-          <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-4">
-            <div className="bg-white rounded-2xl shadow-md p-4">
-              <DayPicker
-                mode="range"
-                selected={selectedRange}
-                onSelect={setSelectedRange}
-                numberOfMonths={1}
-                pagedNavigation
-                fixedWeeks
-                showOutsideDays
-                fromYear={2024}
-                toYear={2030}
-                styles={{
-                  caption: { textAlign: "center", fontWeight: 600 },
-                  day_selected: { backgroundColor: "#10b5cb", color: "white" },
-                }}
-              />
-            </div>
+          {/* WHATSAPP BUTTON */}
+          <button className="w-full bg-[#4f87a3] hover:bg-[#3f738d] text-white  rounded-xl py-3 sm:py-4 text-base sm:text-lg font-semibold shadow">
+            Book Now on WhatsApp
+          </button>
 
-            <div className="bg-white rounded-2xl shadow-md p-4 mt-6 w-full max-w-md">
-              <h3 className="text-lg font-semibold mb-3">Your Selection</h3>
-              <div className="space-y-2 text-gray-700">
-                <div className="flex justify-between">
-                  <span>Check-in:</span>
-                  <span>{formatDate(selectedRange.from)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Check-out:</span>
-                  <span>{formatDate(selectedRange.to)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Total nights:</span>
-                  <span>{nights}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Price per night:</span>
-                  <span>IND {pricePerNight.toLocaleString("id-ID")}</span>
-                </div>
-              </div>
-              <div className="flex justify-between items-center mt-4 border-t pt-2 font-semibold">
-                <span>Total cost:</span>
-                <span className="text-[#10b5cb]">
-                  {totalCost > 0
-                    ? `IND ${totalCost.toLocaleString("id-ID")}`
-                    : ""}
-                </span>
-              </div>
-            </div>
-
-            <button className="mt-6 w-full max-w-md bg-[#10b5cb] hover:bg-[#27c1d5] text-white py-3 rounded-md font-semibold transition">
-              Book Now on WhatsApp
-            </button>
-
-            <div className="bg-white rounded-2xl shadow-md p-4 mt-6 w-full max-w-md text-sm text-gray-700">
-              <p className="font-medium mb-2">Legend:</p>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 bg-[#10b5cb] rounded"></span>
-                  <span>Selected dates</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 bg-gray-300 rounded"></span>
-                  <span>Unavailable</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-4 h-4 border border-gray-400 rounded"></span>
-                  <span>Available</span>
-                </div>
-              </div>
-            </div>
+          {/* CALENDAR */}
+          <div className="bg-white rounded-2xl shadow p-3 sm:p-4 md:p-6 w-full overflow-x-auto flex justify-center">
+            <DayPicker
+              mode="range"
+              selected={selectedRange}
+              onSelect={setSelectedRange}
+              numberOfMonths={1}
+              fromYear={2024}
+              toYear={2030}
+              showOutsideDays={false}
+              pagedNavigation
+              fixedWeeks={false}
+              className="custom-calendar"
+            />
           </div>
         </div>
-      </div>      
+      </div>
     </div>
   );
 }
-
-export default ResortDetails;

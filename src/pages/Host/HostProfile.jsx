@@ -2,8 +2,11 @@ import React from "react";
 import { FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
 import HostSidebar from "../../components/Host/HostSidebar";
 import Navbar from "../../components/Host/Navbar";
+import { useAuth } from "../../context/AuthContext";
 
 const HostProfile = () => {
+
+ 
   return (
     <div>
       <Navbar/>

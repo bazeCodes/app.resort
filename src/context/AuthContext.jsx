@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   // -----------------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
+    
     if (!token) {
       setLoading(false);
       return;
@@ -46,9 +47,9 @@ export const AuthProvider = ({ children }) => {
         console.error("Auth check error:", err);
         setIsLogin(false);
         setUser(null);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     checkUser();
@@ -81,7 +82,11 @@ export const AuthProvider = ({ children }) => {
         logout,
       }}
     >
-      {!loading && children}
+
+{loading ? <div>Something</div> : children}
+      {/* {!loading && children} */}
     </AuthContext.Provider>
   );
 };
+
+

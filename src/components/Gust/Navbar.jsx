@@ -67,14 +67,14 @@ function Navbar() {
           >
             Search
           </Link>
-
-          <Link
+    {isLogin &&  <Link
             to="/host/myresort"
             className="transition"
             style={{ color: "#5b4636", fontWeight: "500" }}
           >
             Host
-          </Link>
+          </Link> }
+         
 
           <Link
             to="*"

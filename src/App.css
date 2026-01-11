@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@media (max-width: 640px) {
+  .custom-calendar {
+    max-width: 280px;
+  }
+
+  .custom-calendar .rdp-day {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}

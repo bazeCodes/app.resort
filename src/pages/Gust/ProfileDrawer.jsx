@@ -5,11 +5,10 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-
 const ProfileDrawer = forwardRef(({ onClose }, ref) => {
   const navigate = useNavigate();
-  const { logout,user } = useAuth();
-  
+  const { logout, user } = useAuth();
+
   return (
     <>
       {/* Background Overlay */}
@@ -18,16 +17,13 @@ const ProfileDrawer = forwardRef(({ onClose }, ref) => {
       {/* Drawer */}
       <div
         ref={ref}
-        className="fixed top-0 right-0 h-full w-[320px] bg-[#f6f1e7] z-50 shadow-xl animate-slideIn"
+        className="fixed top-0 right-0 h-full w-[320px] bg-[#f6f1e7] z-50 shadow-xl animate-slideIn rounded-2xl "
       >
         {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b">
-          <div
-                className="text-lg"
-                style={{ color: "#5b4636", opacity: 0.7 }}
-              >
-                Welcome, {user?.fullName || "User"}
-              </div>
+        <div className="flex justify-between items-center p-4 border-b gap-3">
+          <div className="text-lg" style={{ color: "#5b4636", opacity: 0.7 }}>
+            Hi {user?.fullName || "User"}
+          </div>
           <button onClick={onClose}>
             <FaTimes className="text-xl" />
           </button>
@@ -35,23 +31,63 @@ const ProfileDrawer = forwardRef(({ onClose }, ref) => {
 
         {/* Menu */}
         <div className="p-4 space-y-4">
-          <MenuItem icon={<FaHeart />} text="Likes" />
-          <MenuItem icon={<FaSuitcase />} text="Trips" />
+          <MenuItem
+            icon={<FaHeart />}
+            text="Likes"
+            onClick={() => {
+              navigate("*");
+              onClose();
+            }}
+          />
+          <MenuItem
+            icon={<FaSuitcase />}
+            text="Trips"
+            onClick={() => {
+              navigate("*");
+              onClose();
+            }}
+          />
           <MenuItem
             icon={<FaUserCircle />}
             text="Profile"
-            onClick={() => navigate("/profile")}
+            onClick={() => {
+              navigate("/profile");
+              onClose();
+            }}
           />
-          <MenuItem icon={<FiMessageSquare />} text="Messages" />
-          <MenuItem icon={<IoSettingsOutline />} text="Account Settings" />
-          <MenuItem icon={<FiHelpCircle />} text="Help Center" />
+          <MenuItem
+            icon={<FiMessageSquare />}
+            text="Messages"
+            onClick={() => {
+              navigate("*");
+              onClose();
+            }}
+          />
+          <MenuItem
+            icon={<IoSettingsOutline />}
+            text="Account Settings"
+            onClick={() => {
+              navigate("*");
+              onClose();
+            }}
+          />
+          <MenuItem
+            icon={<FiHelpCircle />}
+            text="Help Center"
+            onClick={() => {
+              navigate("*");
+              onClose();
+            }}
+          />
+        </div>
+        <div className="p-4 border-t">
           <button
             onClick={logout}
-            className="px-4 py-2"
+            className="w-full py-2 rounded-md"
             style={{
               backgroundColor: "#bfa98a",
               color: "white",
-              borderRadius: "6px",
+              navigate:"/"
             }}
           >
             Logout

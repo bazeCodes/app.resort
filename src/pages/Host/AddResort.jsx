@@ -16,7 +16,7 @@ export default function AddResort() {
     bathrooms: 0,
     // property and location
     propertyType: "",
-    flat: "",
+
     address: "",
     landmark: "",
     locality: "",
@@ -120,12 +120,11 @@ export default function AddResort() {
       !!formData.country?.trim() &&
       !!formData.landmark?.trim() &&
       !!formData.state?.trim() &&
-      !!formData.pincode?.trim() &&
-      !!formData.flat?.trim();
+      !!formData.pincode?.trim();
   }
 
   if (currentStep === 5) {
-    stepReady = formData.photos.length > 0;
+    stepReady = formData.photos.length >= 5 && formData.photos.length <= 10;
   }
 
   if (currentStep === 6) {
@@ -133,20 +132,35 @@ export default function AddResort() {
   }
 
   // Photo handling: save File plus previewUrl for display
+  const MAX_PHOTOS = 10;
+
   const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    const mapped = files.map((f) => {
-      return { file: f, previewUrl: URL.createObjectURL(f), name: f.name };
+    setFormData((prev) => {
+      const remainingSlots = MAX_PHOTOS - prev.photos.length;
+
+      if (remainingSlots <= 0) {
+        toast.error("Maximum 10 photos allowed");
+        return prev;
+      }
+
+      const filesToAdd = files.slice(0, remainingSlots);
+
+      const mapped = filesToAdd.map((f) => ({
+        file: f,
+        previewUrl: URL.createObjectURL(f),
+        name: f.name,
+      }));
+
+      return {
+        ...prev,
+        photos: [...prev.photos, ...mapped],
+      };
     });
 
-    setFormData((prev) => ({
-      ...prev,
-      photos: [...prev.photos, ...mapped],
-    }));
-
-    // reset input value is handled by browser if input is not controlled
+    e.target.value = "";
   };
 
   const removePhoto = (index) => {
@@ -325,17 +339,6 @@ export default function AddResort() {
 
             {/* Address Fields */}
             <div className="space-y-0 max-w-xl mx-auto border rounded-xl overflow-hidden">
-              {/* Flat / House */}
-              <input
-                type="text"
-                placeholder="Flat, house, etc. (if applicable)"
-                value={formData.flat || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, flat: e.target.value })
-                }
-                className="w-full border-b p-4 focus:outline-none"
-              />
-
               {/* Street address */}
               <input
                 type="text"
@@ -420,7 +423,8 @@ export default function AddResort() {
                 Add photos of your property
               </h2>
               <p className="text-gray-500">
-                Upload at least one photo. You can add more later.
+                Upload at least <b>5 photos</b>. You can add up to{" "}
+                <b>10 photos</b>.
               </p>
             </div>
 

@@ -34,3 +34,63 @@
 .animate-slideIn {
   animation: slideIn 0.3s ease-out forwards;
 }
+
+.custom-calendar {
+  width: 100%;
+  max-width: 320px;
+  margin: auto;
+}
+
+/* Month title */
+.custom-calendar .rdp-caption_label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Navigation arrows */
+.custom-calendar .rdp-nav_button {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: #000;
+}
+
+/* Weekday labels */
+.custom-calendar .rdp-head_cell {
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Day cells */
+.custom-calendar .rdp-day {
+  border: none;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  height: 36px;
+  width: 36px;
+  margin: auto;
+}
+
+/* Hover */
+.custom-calendar .rdp-day:hover {
+  background-color: #f1f5f9;
+}
+
+/* Selected day */
+.custom-calendar .rdp-day_selected {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+/* Range middle OFF (screenshot has none) */
+.custom-calendar .rdp-day_range_middle {
+  background: none !important;
+}
+
+/* Today indicator OFF */
+.custom-calendar .rdp-day_today {
+  font-weight: 600;
+  text-decoration: none;
+}

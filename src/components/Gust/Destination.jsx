@@ -46,7 +46,7 @@ function Destination({ place }) {
         <p className="text-gray-500 text-sm">{place.city}</p>
         <p className="text-[#10b5cb] font-bold mt-2">${place.basePrice}/night</p>
         <button
-          onClick={() => navigate(`/resort/${place._id}`)}
+          onClick={() => navigate(`/ResortDetails/${place._id}`)}
           className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded"
         >
           See Availability
