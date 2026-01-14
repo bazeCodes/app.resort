@@ -41,11 +41,20 @@ export default function AddResort() {
     });
 
     formData.photos.forEach((p) => {
-      fd.append("photos", p.file); // 'file' based on your structure
+      fd.append("photos", p.file);
     });
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login again");
+      return;
+    }
 
     const res = await fetch("http://localhost:4000/api/property/create", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`, // 🔥 CRITICAL
+      },
       body: fd,
     });
 
@@ -334,6 +343,7 @@ export default function AddResort() {
                 <option value="India - IN">India - IN</option>
                 <option value="USA - US">USA - US</option>
                 <option value="UK - GB">United Kingdom - GB</option>
+                <option value="Bali - Indonesia">Bali - Indonesia</option>
               </select>
             </div>
 

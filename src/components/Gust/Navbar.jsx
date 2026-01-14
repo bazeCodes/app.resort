@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
-import { Outlet, Link } from "react-router-dom";
-import ProfileDrawer from "../../pages/Gust/ProfileDrawer";
+import {
+  FaUserCircle,
+  FaBars,
+  FaTimes,
+  FaHeart,
+  FaSuitcase,
+  FaSearch,
+} from "react-icons/fa";
+import { FiMessageSquare, FiHelpCircle } from "react-icons/fi";
+import { IoSettingsOutline } from "react-icons/io5";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import ProfileDrawer from "./ProfileDrawer";
 import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
-
+  const navigate = useNavigate();
   const { isLogin, user, logout } = useAuth();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -38,15 +47,12 @@ function Navbar() {
       >
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <div className="text-3xl" style={{ color: "#5b4636" }}>
-            🏰
-          </div>
           <Link
             to="/"
             className="text-2xl font-semibold tracking-wide"
             style={{ color: "#5b4636" }}
           >
-            StayEase
+            🏰 StayEase
           </Link>
         </div>
 
@@ -67,14 +73,15 @@ function Navbar() {
           >
             Search
           </Link>
-    {isLogin &&  <Link
-            to="/host/myresort"
-            className="transition"
-            style={{ color: "#5b4636", fontWeight: "500" }}
-          >
-            Host
-          </Link> }
-         
+          {isLogin && (
+            <Link
+              to="/host/myresort"
+              className="transition"
+              style={{ color: "#5b4636", fontWeight: "500" }}
+            >
+              Host
+            </Link>
+          )}
 
           <Link
             to="*"
@@ -109,7 +116,6 @@ function Navbar() {
               )}
 
               {/* LOGOUT BUTTON */}
-              
             </>
           ) : (
             <>
@@ -139,7 +145,7 @@ function Navbar() {
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden text-3xl"
+          className="md:hidden text-3xl z-60"
           style={{ color: "#5b4636" }}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -149,84 +155,146 @@ function Navbar() {
 
       {/* MOBILE MENU */}
       {isMobileMenuOpen && (
-        <div
-          className="absolute top-16 left-0 w-full flex flex-col items-center space-y-4 py-6 md:hidden z-40"
-          style={{
-            backgroundColor: "#f6f1e7",
-            borderBottom: "1px solid #c2b8a3",
-          }}
-        >
-          <Link
-            to="/"
+        <>
+          <div
+            className="fixed inset-0 bg-black/40 z-40"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="text-lg"
-            style={{ color: "#5b4636" }}
-          >
-            Home
-          </Link>
+          />
 
-          <Link
-            to=""
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="text-lg"
-            style={{ color: "#5b4636" }}
-          >
-            Search
-          </Link>
-
-          <Link
-            to="/host/myresort"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="text-lg"
-            style={{ color: "#5b4636" }}
-          >
-            Host
-          </Link>
-
-          {/* AUTH AREA */}
-          {!isLogin ? (
-            <div className="flex flex-col items-center space-y-3">
-              <Link
-                to="/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-lg"
-                style={{ color: "#5b4636" }}
-              >
-                Sign In
-              </Link>
-            </div>
-          ) : (
-            <>
+          <div className="fixed top-0 right-0 h-full w-[300px] bg-[#f6f1e7] z-50 shadow-xl animate-slideIn rounded-2xl flex flex-col">
+            <div className="flex justify-between items-center p-5 border-b">
               <div
-                className="text-lg"
-                style={{ color: "#5b4636", opacity: 0.7 }}
+                className="text-xl"
+                style={{ color: "#2d231c", opacity: 0.7 }}
               >
-                Welcome, {user?.fullName || "User"}
+               👋 Hallo {user?.fullName || "User"}
               </div>
+              <button onClick={() => setIsMobileMenuOpen(false)}>
+                <FaTimes className="text-2xl" />
+              </button>
+            </div>
 
-              {/* MOBILE LOGOUT BUTTON */}
-              <button
+            {/* Menu Items */}
+            <div className="p-4 space-y-4 flex-1">
+              <MobileItem
+                icon={<FaSearch />}
+                text="Search"
                 onClick={() => {
-                  logout();
+                  navigate("/properties");
                   setIsMobileMenuOpen(false);
                 }}
-                className="px-6 py-2"
-                style={{
-                  backgroundColor: "#bfa98a",
-                  color: "white",
-                  borderRadius: "6px",
+              />
+              {isLogin && (
+                <MobileItem
+                  icon={<FaSuitcase />}
+                  text="Host"
+                  onClick={() => {
+                    navigate("/Host/MyResort");
+                    setIsMobileMenuOpen(false);
+                  }}
+                />
+              )}
+              <MobileItem
+                icon={<FaHeart />}
+                text="Likes"
+                onClick={() => {
+                  navigate("/wishlist/:propertyId");
+                  setIsMobileMenuOpen(false);
                 }}
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
+              />
+
+              <MobileItem
+                icon={<FaSuitcase />}
+                text="Trips"
+                onClick={() => {
+                  navigate("*");
+                  setIsMobileMenuOpen(false);
+                }}
+              />
+
+              <MobileItem
+                icon={<FiMessageSquare />}
+                text="Messages"
+                onClick={() => {
+                  navigate("*");
+                  setIsMobileMenuOpen(false);
+                }}
+              />
+
+              <MobileItem
+                icon={<IoSettingsOutline />}
+                text="Account Settings"
+                onClick={() => {
+                  navigate("*");
+                  setIsMobileMenuOpen(false);
+                }}
+              />
+
+              <MobileItem
+                icon={<FiHelpCircle />}
+                text="Help Center"
+                onClick={() => {
+                  navigate("*");
+                  setIsMobileMenuOpen(false);
+                }}
+              />
+
+              {isLogin && (
+                <MobileItem
+                  icon={<FaUserCircle />}
+                  text="Profile"
+                  onClick={() => {
+                    navigate("/profile");
+                    setIsMobileMenuOpen(false);
+                  }}
+                />
+              )}
+            </div>
+
+            {!isLogin && (
+              <div className="p-4 border-t">
+                <button
+                  onClick={() => {
+                    navigate("/login");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-2 rounded-md"
+                  style={{
+                    backgroundColor: "#bfa98a",
+                    color: "white",
+                  }}
+                >
+                  Sign In
+                </button>
+              </div>
+            )}
+
+            {/* Footer / Logout */}
+            {isLogin && (
+              <div className="p-4 border-t">
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-2 rounded-md"
+                  style={{
+                    backgroundColor: "#bfa98a",
+                    color: "white",
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       {/* Floating Button */}
-      <button
+      <Link
         className="fixed bottom-6 right-6 px-6 py-3 shadow-md"
+        to="/properties"
         style={{
           backgroundColor: "#5b4636",
           color: "#f6f1e7",
@@ -236,11 +304,22 @@ function Navbar() {
         }}
       >
         Book Now
-      </button>
+      </Link>
 
       <Outlet />
     </div>
   );
 }
+
+const MobileItem = ({ text, onClick, icon }) => (
+  <div
+    onClick={onClick}
+    className="flex items-center gap-3 mb-2 px-3 py-2 rounded-lg cursor-pointer text-lg hover:bg-gray-100"
+    style={{ color: "#5b4636" }}
+  >
+    {icon && <span className="text-xl font-medium">{icon}</span>}
+    {text}
+  </div>
+);
 
 export default Navbar;

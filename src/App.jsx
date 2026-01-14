@@ -20,7 +20,8 @@ import NotFound from "./pages/Errors/NotFond";
 // Auth
 import ProtectedRoute from "./components/ProtectedRoute";
 import Properties from "./pages/Gust/Properties";
-
+import Wishlist from "./components/Gust/Wishlist";
+import Teast from "./pages/Teast";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -40,6 +41,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
           <Route path="/properties" element={<Properties />} />
           <Route path="/ResortDetails/:id" element={<ResortDetails />} />
           <Route path="/Host/MyResort" element={<MyResort />} />
@@ -48,6 +50,8 @@ function App() {
           <Route path="/Host/ConfirmProperty" element={<ConfirmProperty />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/wishlist/:propertyId" element={<Wishlist/>}/>
+          <Route path="/teast" element={<Teast/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

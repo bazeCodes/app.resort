@@ -8,13 +8,34 @@ export default function ResortDetails() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   const [liked, setLiked] = useState(false);
   const [place, setPlace] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const toggleWishlist = async (propertyId) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(
+      `http://localhost:4000/api/wishlist/toggle/${propertyId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    setLiked((prev) => ({
+      ...prev,
+      [propertyId]: data.liked,
+    }));
+  };
 
   useEffect(() => {
     const fetchResort = async () => {
@@ -92,7 +113,7 @@ export default function ResortDetails() {
           <div className="relative rounded-2xl overflow-hidden shadow-lg">
             <img
               src={`http://localhost:4000/uploads/properties/${photos[currentIndex]}`}
-              className="w-full h-[220px] sm:h-[300px] md:h-[380px] lg:h-[420px] object-cover transition-all duration-500"
+              className="w-full h-[220px] sm:h-[300px] md:h-[380px] lg:h-[420px] object-contain transition-all duration-500"
               alt={`Property image ${currentIndex + 1}`}
             />
 
@@ -114,12 +135,15 @@ export default function ResortDetails() {
 
             {/* LIKE */}
             <button
-              onClick={() => setLiked(!liked)}
-              className="absolute top-4 right-4 bg-white p-2 rounded-full shadow"
+              onClick={() => toggleWishlist(place._id)}
+              className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow"
             >
               <Heart
+                size={20}
                 className={
-                  liked ? "text-red-500 fill-red-500" : "text-gray-600"
+                  liked[place._id]
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-600"
                 }
               />
             </button>
@@ -141,17 +165,29 @@ export default function ResortDetails() {
             </p>
 
             {/* HOST */}
-            <div className="flex items-center gap-4 mt-6">
-              <img
-                src="https://randomuser.me/api/portraits/women/44.jpg"
-                className="w-12 h-12 rounded-full"
-                alt=""
-              />
-              <div>
-                <p className="font-semibold">Sarah Jenkins</p>
-                <p className="text-sm text-gray-500">(Joined 2020)</p>
+            {place?.hostId && (
+              <div className="flex items-center gap-4 mt-6">
+                <img
+                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  className="w-12 h-12 rounded-full"
+                  alt=""
+                />
+                {/* <img
+                  src={
+                    place.hostId.avatar ||
+                    `https://ui-avatars.com/api/?name=${place.hostId.name}`
+                  }
+                  className="w-12 h-12 rounded-full object-cover"
+                  alt={place.hostId.name}
+                /> */}
+                <div>
+                  <p className="font-semibold">{place?.hostId.name}</p>
+                  <p className="text-sm text-gray-500">
+                    Joined {new Date(place?.hostId.createdAt).getFullYear()}
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* BIO */}
             <div className="mt-6 bg-white rounded-xl p-5 shadow">
