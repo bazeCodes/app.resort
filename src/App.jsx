@@ -3,7 +3,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Layout
-import Navbar from "./components/Gust/Navbar";
+import Navbar from "./components/Navbar";
 
 // ✅ Import pages
 import Index from "./pages/Gust/Index";
@@ -16,12 +16,13 @@ import ConfirmProperty from "./pages/Host/ConfirmProperty";
 import Profile from "./pages/Gust/Profile";
 import ResortDetails from "./pages/Gust/ResortDetails";
 import NotFound from "./pages/Errors/NotFond";
+import Teast from "./pages/Teast";
+import Wishlist from "./components/Wishlist";
 
 // Auth
 import ProtectedRoute from "./components/ProtectedRoute";
 import Properties from "./pages/Gust/Properties";
-import Wishlist from "./components/Gust/Wishlist";
-import Teast from "./pages/Teast";
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -44,7 +45,7 @@ function App() {
           
           <Route path="/properties" element={<Properties />} />
           <Route path="/ResortDetails/:id" element={<ResortDetails />} />
-          <Route path="/Host/MyResort" element={<MyResort />} />
+          <Route path="/host/MyResort" element={<MyResort />} />
           <Route path="/Host/HostProfile" element={<HostProfile />} />
           <Route path="/Host/AddResort" element={<AddResort />} />
           <Route path="/Host/ConfirmProperty" element={<ConfirmProperty />} />

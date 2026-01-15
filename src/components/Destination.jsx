@@ -29,14 +29,14 @@ function Destination({ place }) {
   };
 
   return (
-    <div className="relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+    <div className="relative bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-lg transition">
       
       {/* Image section */}
       <div className="relative">
         <img
           src={`http://localhost:4000/uploads/properties/${place.photos[0]}`}
           alt={place.PropertyName}
-          className="w-full h-64 object-cover"
+          className="w-full h-64 object-cover rounded-3xl"
         />
 
         {/* Rating */}
@@ -48,7 +48,7 @@ function Destination({ place }) {
         {/* Like button */}
         <button
           onClick={() => toggleWishlist(place._id)}
-          className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow"
+          className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow cursor-pointer"
         >
           <Heart
             size={20}
@@ -81,7 +81,7 @@ function Destination({ place }) {
 
         <button
           onClick={() => navigate(`/ResortDetails/${place._id}`)}
-          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded"
+          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded-xl cursor-pointer"
         >
           See Availability
         </button>

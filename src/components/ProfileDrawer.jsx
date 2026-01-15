@@ -3,7 +3,7 @@
   import { FiMessageSquare, FiHelpCircle } from "react-icons/fi";
   import { IoSettingsOutline } from "react-icons/io5";
   import { useNavigate } from "react-router-dom";
-  import { useAuth } from "../../context/AuthContext";
+  import { useAuth } from "../context/AuthContext";
 
   const ProfileDrawer = forwardRef(({ onClose }, ref) => {
     const navigate = useNavigate();

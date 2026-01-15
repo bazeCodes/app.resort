@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Home, Trees, Gem, Wrench } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import Footer from "../../components/Gust/Footer";
-import Destination from "../../components/Gust/Destination";
+import Footer from "../../components/Footer";
+import Destination from "../../components/Destination";
 
 function Index() {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ function Index() {
 
         <div className="relative z-10 max-w-5xl mx-auto">
           <h1
-            className="text-5xl font-bold mb-4"
+            className="text-6xl font-bold mb-4"
             style={{ color: "hsl(187, 85%, 43%)" }}
           >
             Find Your Perfect Stay
@@ -59,7 +59,7 @@ function Index() {
 
       {/* Destination Section */}
       <section
-        className="max-w mx-auto px-4 sm:px-6 md:px-10 lg:px-30 py-12 bg-[#f0e6d5c3]"
+        className="max-w mx-auto px-4 sm:px-6 md:px-10 lg:px-30 py-12 bg-[#F6F1E7]"
         style={{
           background: "linear-gradient(150deg, #f0e6d5c3 0%, #faf7f2 100%)",
         }}
@@ -73,7 +73,7 @@ function Index() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
           {destinations.slice(0, 6).map((place) => (
             <Destination key={place._id} place={place} />
           ))}
@@ -82,7 +82,7 @@ function Index() {
           <button
             onClick={() => navigate("/Properties")}
             style={{ backgroundColor: "#10b5cb" }}
-            className="px-8 py-3 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
+            className="px-8 py-3 text-white font-semibold rounded-xl shadow hover:opacity-90 transition cursor-pointer"
           >
             View More Properties
           </button>
@@ -90,7 +90,7 @@ function Index() {
       </section>
 
       {/* About Section */}
-      <section id="About" className="bg-[#faf7f2] py-20 px-6">
+      <section id="About" className="bg-[#F6F1E7] py-20 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* LEFT CONTENT */}
           <div>

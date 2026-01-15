@@ -1,8 +1,8 @@
 import React from "react";
-import linkedinLogo from "../../assets/linkedin-logo.png";
-import instagramLogo from "../../assets/instagram-logo.png";
-import whatsappLogo from "../../assets/whatsapp-logo.svg";
-import gmailLogo from "../../assets/gmail-logo.svg"
+import linkedinLogo from "../assets/linkedin-logo.png";
+import instagramLogo from "../assets/instagram-logo.png";
+import whatsappLogo from "../assets/whatsapp-logo.svg";
+import gmailLogo from "../assets/gmail-logo.svg"
 
 function Footer() {
   return (

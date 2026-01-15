@@ -120,7 +120,7 @@ export default function ResortDetails() {
             {/* LEFT */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 cursor-pointer"
             >
               <ChevronLeft />
             </button>
@@ -128,7 +128,7 @@ export default function ResortDetails() {
             {/* RIGHT */}
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow hover:bg-gray-100 cursor-pointer"
             >
               <ChevronRight />
             </button>
@@ -136,7 +136,7 @@ export default function ResortDetails() {
             {/* LIKE */}
             <button
               onClick={() => toggleWishlist(place._id)}
-              className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow"
+              className="absolute top-3 right-3 bg-white/90 rounded-full p-2 shadow cursor-pointer"
             >
               <Heart
                 size={20}
@@ -231,7 +231,7 @@ export default function ResortDetails() {
           </div>
 
           {/* WHATSAPP BUTTON */}
-          <button className="w-full bg-[#4f87a3] hover:bg-[#3f738d] text-white  rounded-xl py-3 sm:py-4 text-base sm:text-lg font-semibold shadow">
+          <button className="w-full bg-[#4f87a3] hover:bg-[#3f738d] text-white  rounded-xl py-3 sm:py-4 text-base sm:text-lg font-semibold shadow cursor-pointer">
             Book Now on WhatsApp
           </button>
 

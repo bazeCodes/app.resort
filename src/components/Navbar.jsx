@@ -11,7 +11,7 @@ import { FiMessageSquare, FiHelpCircle } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import ProfileDrawer from "./ProfileDrawer";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,10 +36,10 @@ function Navbar() {
   }, []);
 
   return (
-    <div style={{ fontFamily: "'Playfair Display', serif" }}>
+    <div >
       {/* HEADER */}
       <header
-        className="flex items-center justify-between px-10 py-6 shadow-sm sticky top-0 z-50"
+        className="flex items-center justify-between px-10 py-6 shadow-sm sticky top-0 z-50 text-black"
         style={{
           backgroundColor: "#f6f1e7",
           borderBottom: "1px solid #c2b8a3",
@@ -49,45 +49,29 @@ function Navbar() {
         <div className="flex items-center space-x-2">
           <Link
             to="/"
-            className="text-2xl font-semibold tracking-wide"
-            style={{ color: "#5b4636" }}
+            className="text-3xl font-bold tracking-wide "
+            style={{ fontFamily: "'Playfair Display', serif" }}
           >
-            🏰 StayEase
+            StayEase
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-10 text-lg">
-          <Link
-            to="/"
-            className="transition"
-            style={{ color: "#5b4636", fontWeight: "500" }}
-          >
+        <nav className="hidden md:flex space-x-10 text-xl font-[500]">
+          <Link to="/" className="transition">
             Home
           </Link>
 
-          <Link
-            to="*"
-            className="transition"
-            style={{ color: "#5b4636", fontWeight: "500" }}
-          >
+          <Link to="*" className="transition">
             Search
           </Link>
           {isLogin && (
-            <Link
-              to="/host/myresort"
-              className="transition"
-              style={{ color: "#5b4636", fontWeight: "500" }}
-            >
+            <Link to="/host/myresort" className="transition">
               Host
             </Link>
           )}
 
-          <Link
-            to="*"
-            className="transition"
-            style={{ color: "#5b4636", fontWeight: "500" }}
-          >
+          <Link to="*" className="transition">
             About
           </Link>
         </nav>
@@ -167,7 +151,7 @@ function Navbar() {
                 className="text-xl"
                 style={{ color: "#2d231c", opacity: 0.7 }}
               >
-               👋 Hallo {user?.fullName || "User"}
+                👋 Hallo {user?.fullName || "User"}
               </div>
               <button onClick={() => setIsMobileMenuOpen(false)}>
                 <FaTimes className="text-2xl" />

@@ -1,9 +1,9 @@
 import React from "react";
 
 import { MapPin, Users, Bed, Bath, Edit, Trash2 } from "lucide-react";
-import HostSidebar from "../../components/Host/HostSidebar";
+import HostSidebar from "../../components/HostSidebar";
 import { Link } from "react-router-dom";
-import Navbar from "../../components/Host/Navbar";
+import Navbar from "../../components/HostNavbar";
 
 function AddResort() {
   const resorts = [

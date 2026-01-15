@@ -11,7 +11,7 @@ const sidebarItems = [
   {
     title: "My Resorts",
     icon: Home,
-    path: "/Host/MyResort",
+    path: "",
   },
 
   {

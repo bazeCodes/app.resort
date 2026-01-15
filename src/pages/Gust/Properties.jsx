@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Destination from "../../components/Gust/Destination";
+import Destination from "../../components/Destination";
 import { useNavigate } from "react-router-dom";
 
 function Properties() {
@@ -48,7 +48,7 @@ function Properties() {
         <div className="mt-6">
           <button
             onClick={() => navigate("/")}
-            className="px-6 py-3 bg-[#10b5cb] text-white rounded-lg font-semibold shadow hover:opacity-90 transition"
+            className="px-6 py-3 bg-[#10b5cb] text-white rounded-lg font-semibold shadow hover:opacity-90 transition cursor-pointer"
           >
             Back to Home
           </button>
