@@ -29,7 +29,7 @@ function Destination({ place }) {
   };
 
   return (
-    <div className="relative bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-lg transition">
+    <div className="relative bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
       
       {/* Image section */}
       <div className="relative">
@@ -81,7 +81,7 @@ function Destination({ place }) {
 
         <button
           onClick={() => navigate(`/ResortDetails/${place._id}`)}
-          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded-xl cursor-pointer"
+          className="mt-4 w-full bg-[#10b5cb] text-white py-2 rounded-xl cursor-pointer transition-all duration-300 hover:-translate-y-2"
         >
           See Availability
         </button>

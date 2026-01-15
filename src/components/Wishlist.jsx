@@ -21,6 +21,22 @@ export default function Wishlist() {
 
     fetchWishlist();
   }, []);
+  
+  const removeFromWishlist = async (propertyId, e) => {
+    e.stopPropagation();
+
+    const token = localStorage.getItem("token");
+
+    await fetch(`http://localhost:4000/api/wishlist/toggle/${propertyId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // update UI immediately
+    setLists((prev) => prev.filter((item) => item.property._id !== propertyId));
+  };
 
   return (
     <div className="min-h-screen bg-white px-4 py-10 sm:px-6 lg:px-25">
@@ -37,23 +53,29 @@ export default function Wishlist() {
           <div
             key={item._id}
             onClick={() => navigate(`/ResortDetails/${item.property._id}`)}
-            className="cursor-pointer rounded-2xl bg-white shadow-sm transition hover:shadow-md"
+            className=" cursor-pointer rounded-2xl bg-white shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-2"
           >
             <div className="aspect-[4/3] overflow-hidden rounded-2xl">
               <img
                 src={`http://localhost:4000/uploads/properties/${item.property.photos[0]}`}
                 className="h-full w-full object-cover"
                 alt=""
-                
               />
             </div>
 
-            <div className="px-2 pt-2 pb-3">
+            <div className="px-2 pt-2 pb-3 relative">
               <h3 className="text-sm font-medium leading-snug">
                 {item.property.PropertyName}
               </h3>
               <p className="text-xs text-gray-500">{item.property.city}</p>
               <p className="text-xs text-gray-500">Saved</p>
+              <button
+                onClick={(e) => removeFromWishlist(item.property._id, e)}
+                className="absolute right-2 top-2 z-10   p-1.5   "
+                title="Remove from wishlist"
+              >
+                🗑
+              </button>
             </div>
           </div>
         ))}

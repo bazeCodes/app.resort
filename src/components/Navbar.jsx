@@ -277,7 +277,7 @@ function Navbar() {
 
       {/* Floating Button */}
       <Link
-        className="fixed bottom-6 right-6 px-6 py-3 shadow-md"
+        className="fixed bottom-6 right-6 px-6 py-3 shadow-md transition-all duration-300 hover:-translate-y-2"
         to="/properties"
         style={{
           backgroundColor: "#5b4636",

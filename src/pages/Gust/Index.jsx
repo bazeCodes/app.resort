@@ -73,7 +73,7 @@ function Index() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 ">
           {destinations.slice(0, 6).map((place) => (
             <Destination key={place._id} place={place} />
           ))}
@@ -82,7 +82,7 @@ function Index() {
           <button
             onClick={() => navigate("/Properties")}
             style={{ backgroundColor: "#10b5cb" }}
-            className="px-8 py-3 text-white font-semibold rounded-xl shadow hover:opacity-90 transition cursor-pointer"
+            className="px-8 py-3 text-white font-semibold rounded-xl shadow hover:opacity-90  cursor-pointer transition-all duration-300 hover:-translate-y-2"
           >
             View More Properties
           </button>
@@ -116,8 +116,9 @@ function Index() {
             </p>
 
             <button
+              onClick={() =>navigate("/*")}
               style={{ backgroundColor: "#10b5cb" }}
-              className="mt-8 px-7 py-3 text-white font-medium rounded-lg shadow hover:opacity-90 transition"
+              className="mt-8 px-7 py-3 text-white font-medium rounded-lg shadow hover:opacity-90 transition-all duration-300 hover:-translate-y-2"
             >
               Learn Our Story
             </button>

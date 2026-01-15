@@ -99,7 +99,9 @@ export default function ResortDetails() {
         className="flex items-center gap-2 text-gray-600 hover:text-black mb-4"
       >
         <ChevronLeft size={20} />
-        <span className="text-sm font-medium">Back</span>
+        <span className="text-sm font-medium transition-all duration-300 hover:-translate-y-2">
+          Back
+        </span>
       </button>
       <div>
         <h1 className="text-2xl sm:text-3xl font-semibold mb-4">
@@ -191,9 +193,10 @@ export default function ResortDetails() {
 
             {/* BIO */}
             <div className="mt-6 bg-white rounded-xl p-5 shadow">
+              <p className=" text-lg font-semibold">Description</p>
               <p className="text-gray-700">
-                (Bio: Experienced host, passionate about hospitality and
-                travel.)
+               Experienced host, passionate about hospitality and
+                travel................
               </p>
             </div>
           </div>
@@ -225,13 +228,13 @@ export default function ResortDetails() {
             <div className="flex justify-between text-lg font-semibold">
               <span>Total cost:</span>
               <span>
-                ₹{totalCost > 0 ? ` ${totalCost.toLocaleString("id-ID")}` : ""}
+                ₹{totalCost > 0 ? ` ${totalCost.toLocaleString("en-IN")}` : ""}
               </span>
             </div>
           </div>
 
           {/* WHATSAPP BUTTON */}
-          <button className="w-full bg-[#4f87a3] hover:bg-[#3f738d] text-white  rounded-xl py-3 sm:py-4 text-base sm:text-lg font-semibold shadow cursor-pointer">
+          <button className="w-full bg-[#4f87a3] hover:bg-[#3f738d] text-white  rounded-xl py-3 sm:py-4 text-base sm:text-lg font-semibold shadow cursor-pointer transition-all duration-300 hover:-translate-y-2">
             Book Now on WhatsApp
           </button>
 

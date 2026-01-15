@@ -343,7 +343,7 @@ export default function AddResort() {
                 <option value="India - IN">India - IN</option>
                 <option value="USA - US">USA - US</option>
                 <option value="UK - GB">United Kingdom - GB</option>
-                <option value="Bali - Indonesia">Bali - Indonesia</option>
+                <option value="Bali - ID">Bali - ID</option>
               </select>
             </div>
 

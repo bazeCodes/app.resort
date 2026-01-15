@@ -28,7 +28,7 @@ function Footer() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mt-16">
             {/* WhatsApp */}
             <div className="flex flex-col items-center">
-              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center">
+              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-2">
                 <img
                   src={whatsappLogo}
                   alt="WhatsApp"
@@ -41,7 +41,7 @@ function Footer() {
 
             {/* Gmail */}
             <div className="flex flex-col items-center">
-              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center">
+              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-2">
                 <img
                   src={gmailLogo}
                   alt="Gmail"
@@ -54,7 +54,7 @@ function Footer() {
 
             {/* Instagram */}
             <div className="flex flex-col items-center">
-              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center">
+              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-2">
                 <img
                   src={instagramLogo}
                   alt="Instagram"
@@ -66,8 +66,8 @@ function Footer() {
             </div>
 
             {/* LinkedIn */}
-            <div className="flex flex-col items-center">
-              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center">
+            <div className="flex flex-col items-center ">
+              <div className="w-24 h-24 rounded-2xl bg-[#10b5cb] shadow-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-2">
                 <img
                   src={linkedinLogo}
                   alt="LinkedIn"
@@ -127,10 +127,10 @@ function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
             <div className="flex gap-4">
-              <a href="#" className="text-white text-3xl">
+              <a href="#" className="text-white text-3xl transition-all duration-300 hover:-translate-y-2">
                 <img src={linkedinLogo} alt="LinkedIn" className="w-8 h-8" />
               </a>
-              <a href="#" className="text-white text-3xl">
+              <a href="#" className="text-white text-3xl transition-all duration-300 hover:-translate-y-2">
                 <img src={instagramLogo} alt="Instagram" className="w-8 h-8" />
               </a>
             </div>
