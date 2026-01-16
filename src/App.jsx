@@ -30,7 +30,6 @@ function App() {
     <>
       <Router>
         <Routes>
-          {/* ✅ All main pages use Navbar (header + footer shared) */}
           <Route path="/" element={<Navbar />}>
             <Route path="/" element={<Index />} />{" "}
           </Route>

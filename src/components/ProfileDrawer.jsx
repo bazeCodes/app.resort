@@ -22,7 +22,7 @@
           {/* Header */}
           <div className="flex justify-between items-center p-5 border-b gap-3">
             <div className="text-xl" style={{ color: "#5b4636", opacity: 0.7 }}>
-             👋 Hallo {user?.fullName || "User"}
+             👋 Hallo {user.name || "User"}
             </div>
             <button onClick={onClose}>
               <FaTimes className="text-2xl" />

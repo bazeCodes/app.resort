@@ -34,7 +34,6 @@ export default function Wishlist() {
       },
     });
 
-    // update UI immediately
     setLists((prev) => prev.filter((item) => item.property._id !== propertyId));
   };
 

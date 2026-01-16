@@ -9,12 +9,12 @@ export default function AddResort() {
 
   const [formData, setFormData] = useState({
     PropertyName: "",
-    // Basics (start from 0 as you requested)
+
     guests: 0,
     bedrooms: 0,
     beds: 0,
     bathrooms: 0,
-    // property and location
+
     propertyType: "",
 
     address: "",
@@ -24,9 +24,9 @@ export default function AddResort() {
     state: "",
     pincode: "",
     country: "",
-    // photos
+
     photos: [],
-    // pricing
+
     basePrice: "",
     weekendPrice: "",
   });
@@ -53,7 +53,7 @@ export default function AddResort() {
     const res = await fetch("http://localhost:4000/api/property/create", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`, // 🔥 CRITICAL
+        Authorization: `Bearer ${token}`, 
       },
       body: fd,
     });
@@ -65,17 +65,14 @@ export default function AddResort() {
   const totalSteps = 6;
   const progress = Math.round((currentStep / totalSteps) * 100);
 
-  // Revoke objectURLs when photos are removed or component unmounts
   useEffect(() => {
     return () => {
       formData.photos.forEach((p) => {
         if (p && p.previewUrl) URL.revokeObjectURL(p.previewUrl);
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --- HANDLE NEXT BUTTON ---
   const handleNext = async () => {
     if (!stepReady) return;
 
@@ -140,7 +137,6 @@ export default function AddResort() {
     stepReady = !!formData.basePrice?.trim() && !!formData.weekendPrice?.trim();
   }
 
-  // Photo handling: save File plus previewUrl for display
   const MAX_PHOTOS = 10;
 
   const handlePhotoUpload = (e) => {
@@ -182,10 +178,8 @@ export default function AddResort() {
     });
   };
 
-  // rendering each step
   const renderStepContent = () => {
     switch (currentStep) {
-      // 1. PropertyName
       case 1:
         return (
           <div className="space-y-6">
@@ -213,7 +207,6 @@ export default function AddResort() {
           </div>
         );
 
-      // 2. Basics Section (counters)
       case 2:
         return (
           <div className="space-y-10">
@@ -276,7 +269,6 @@ export default function AddResort() {
           </div>
         );
 
-      // 3. Property Type
       case 3:
         return (
           <div className="space-y-6">
@@ -311,7 +303,6 @@ export default function AddResort() {
           </div>
         );
 
-      // 4. Address
       case 4:
         return (
           <div className="space-y-10">
@@ -409,11 +400,10 @@ export default function AddResort() {
                 type="text"
                 placeholder="PIN code"
                 value={formData.pincode}
-                maxLength={6} // optional: limit to 6 digits (India PIN)
+                maxLength={6} 
                 onChange={(e) => {
                   const value = e.target.value;
 
-                  // Allow ONLY digits
                   if (/^\d*$/.test(value)) {
                     setFormData({ ...formData, pincode: value });
                   }
@@ -424,7 +414,6 @@ export default function AddResort() {
           </div>
         );
 
-      // 5. Photos
       case 5:
         return (
           <div className="space-y-6">
@@ -483,7 +472,6 @@ export default function AddResort() {
           </div>
         );
 
-      // 6. Pricing (base price + weekend price)
       case 6:
         return (
           <div className="space-y-10">

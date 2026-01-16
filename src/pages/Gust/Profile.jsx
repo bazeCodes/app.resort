@@ -8,7 +8,7 @@ function Profile() {
   const [updatedName, setUpdatedName] = useState("");
   const [message, setMessage] = useState("");
 
-  // 🟦 Load user on mount
+  //  Load user on mount
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ function Profile() {
     fetchProfile();
   }, []);
 
-  // 🟨 Update user
+  //  Update user
   const handleUpdate = async () => {
     const token = localStorage.getItem("token");
 
@@ -51,7 +51,7 @@ function Profile() {
     }
   };
 
-  // 🧠 Prevent rendering before user loads
+  //  Prevent rendering before user loads
   if (!user) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">

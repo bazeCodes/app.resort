@@ -17,7 +17,6 @@ function Properties() {
           throw new Error(data.message || "Failed to fetch properties");
         }
 
-        // ⚠️ adjust depending on backend response shape
         setDestinations(data.properties || data);
       } catch (err) {
         console.error("Failed to load properties", err);
@@ -35,7 +34,7 @@ function Properties() {
 
   return (
     <div className="min-h-screen bg-[#faf7f2] flex flex-col">
-      {/* ===== PAGE HEADER ===== */}
+      {/* PAGE HEADER */}
       <section className="px-4 sm:px-6 lg:px-16 py-10 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
           All Properties

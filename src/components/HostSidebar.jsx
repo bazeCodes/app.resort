@@ -11,7 +11,7 @@ const sidebarItems = [
   {
     title: "My Resorts",
     icon: Home,
-    path: "",
+    path: "/host/myresort",
   },
 
   {
@@ -38,7 +38,7 @@ function HostSidebar() {
 
   return (
     <>
-      {/* ===== Desktop Sidebar ===== */}
+      {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-60 bg-white shadow-md p-6 flex-col relative">
         <Link to="/" className="text-xl font-semibold mb-6">
           Host Dashboard

@@ -22,8 +22,6 @@ function Index() {
       .catch((err) => console.error("Error fetching resorts:", err));
   }, []);
 
-  //useffect dependancy array example
-
   const services = [
     { icon: <Home size={22} />, title: "Villa Development" },
     { icon: <Trees size={22} />, title: "Land Sourcing & Sales" },

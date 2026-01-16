@@ -99,7 +99,6 @@ function Navbar() {
                 />
               )}
 
-              {/* LOGOUT BUTTON */}
             </>
           ) : (
             <>
@@ -112,16 +111,6 @@ function Navbar() {
                 }}
               >
                 Login
-              </Link>
-              <Link
-                to="/register"
-                className="px-4 py-2"
-                style={{
-                  color: "#5b4636",
-                  border: "1px solid #b6a893",
-                }}
-              >
-                Register
               </Link>
             </>
           )}
@@ -151,7 +140,7 @@ function Navbar() {
                 className="text-xl"
                 style={{ color: "#2d231c", opacity: 0.7 }}
               >
-                👋 Hallo {user?.fullName || "User"}
+                👋 Hallo {user?.name || "User"}
               </div>
               <button onClick={() => setIsMobileMenuOpen(false)}>
                 <FaTimes className="text-2xl" />
